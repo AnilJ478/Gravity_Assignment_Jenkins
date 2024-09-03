@@ -2,7 +2,6 @@ import boto3
 import sys
 import logging
 import logging.config
-import json
 
 ### Setting up log formatting
 logging.config.fileConfig("log.ini")
@@ -12,7 +11,6 @@ logger = logging.getLogger('sLogger')
 ec = boto3.client('ec2')
 cloudwatch = boto3.client('cloudwatch')
 
-
 def main():
     
     alert_setup()
@@ -21,7 +19,6 @@ Tag = { "Ubuntu, AmazonAMI"}
 read_tags=dict['Tag']
 tag1 = read_tags.split(",") 
 read_sns = "SNS Topic URL" 
-
 
 def alert_setup():
     for i in tag1:
@@ -74,8 +71,7 @@ def alert_setup():
                                     StateValue='OK',
                                     StateReason='Reset'
                                 )
-                                
-                                
+                                                                
                                 diskreadops_alarm = cloudwatch.put_metric_alarm(
                                     AlarmName= 'DiskReadOpsAlarm' + iname,
                                     AlarmDescription= hostname,
