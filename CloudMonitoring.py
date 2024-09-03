@@ -8,49 +8,20 @@ import json
 logging.config.fileConfig("log.ini")
 logger = logging.getLogger('sLogger')
 
-### Using SDK 'boto3' : Elastic Load Balancer and CloudWatch Functions
+### Using SDK 'boto3' : ec2 instance CPU, Disk monitoring and CloudWatch Functions
 ec = boto3.client('ec2')
 cloudwatch = boto3.client('cloudwatch')
 
 
 def main():
     
-    inputValidationGeneratingAlarm()
+    alert_setup()
 
-
-#### Validation - need to pass 'alert_configuration.json' while running the script
-
-def inputValidationGeneratingAlarm():
-
-    ## Checking if we are passing configuration file as parameter to the script
-    logger.info("Passing parameters to the python script for generation of CloudWatch Alarms based on Thresholds")
-    args = sys.argv[1:]
-
-    if args:
-        logger.info("We can proceed with the script execution")
-    else:
-        print("Please pass parameter while setting up the alarms\nFormat - python alert_elbsetup.py alert_configuration.json")
-        logger.info("Exiting without execution need parameters while running the script")
-        exit()
-    
-    inputFileFormatCheck()
-
-
-### Reading configuration file
 Tag = { "Ubuntu, AmazonAMI"}
 read_tags=dict['Tag']
 tag1 = read_tags.split(",") 
 read_sns = "SNS Topic URL" 
-def inputFileFormatCheck():
-    try:
-        with open(sys.argv[1],'r') as f:
-            contents=f.read()
-        dict = json.loads(contents)
-    except:
-        print("Could not open file contents due to improper inputs in configuration file,exiting the script")
-        logger.info("Could not open file contents, exiting the script")
-        exit()
-		
+
 
 def alert_setup():
     for i in tag1:
@@ -169,4 +140,4 @@ def alert_setup():
                                     StateReason='Reset'
                                 )
 
-if __name__ == '__main__': main(alert_setup)
+if __name__ == '__main__': main()
